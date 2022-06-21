@@ -1,0 +1,61 @@
+spring:
+  profiles:
+    include: local
+---
+spring:
+  profiles: local
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/ranking?allowPublicKeyRetrieval=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: alsdud6038
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        enable_lazy_load_no_trans: false
+        default_batch_fetch_size: 1000
+---
+spring:
+  profiles: h2
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        enable_lazy_load_no_trans: false
+        default_batch_fetch_size: 1000
+    show-sql: true
+    generate-ddl: true
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: DEBUG
+          type:
+            descriptor:
+              sql:
+                BasicBinder: TRACE
+  h2:
+    console:
+      enabled: true
+---
