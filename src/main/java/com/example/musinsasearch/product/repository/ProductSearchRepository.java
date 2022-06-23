@@ -13,7 +13,7 @@ import static com.example.musinsasearch.product.domain.QProduct.product;
 public class ProductSearchRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<Integer> findByProductPricesByCategory() {
+    public List<Integer> searchProductLowestPricesByCategory() {
         List<Integer> products = jpaQueryFactory.select(product.price.min())
                 .from(product)
                 .groupBy(product.category)
