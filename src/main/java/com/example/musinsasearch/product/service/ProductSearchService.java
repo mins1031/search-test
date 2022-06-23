@@ -1,10 +1,13 @@
 package com.example.musinsasearch.product.service;
 
+import com.example.musinsasearch.brand.domain.Brand;
+import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponse;
 import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponses;
+import com.example.musinsasearch.product.dto.ProductLowestPriceAndBrandResponse;
 import com.example.musinsasearch.product.repository.ProductRepository;
 import com.example.musinsasearch.product.repository.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +28,12 @@ public class ProductSearchService {
     private final ProductSearchRepository productSearchRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
 
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
         List<Category> allCategories = categoryRepository.findAll();
+        //find category num 만 가져올수는 없나? 되면 얼마나 걸리나..?
         List<Product> productsByLowestPrice = new ArrayList<>();
 
         for (Category category : allCategories) {
@@ -64,4 +69,41 @@ public class ProductSearchService {
 
         return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsGroupByCategory));
     }
+
+    @Transactional(readOnly = true)
+    public ProductLowestPriceAndBrandResponse searchLowestPriceAndOneBrandInAllBrand() {
+        List<Brand> brands = brandRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        List<ProductLowestPriceAndBrandResponse> tempResponses = new ArrayList<>();
+
+        filterLowestPriceFromCategoryAndBrand(brands, categories);
+
+
+        return null;
+    }
+
+    private void filterLowestPriceFromCategoryAndBrand(List<Brand> brands, List<Category> categories) {
+        List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
+
+        for (Brand brand : brands) {
+            List<ProductLowestPriceAndBrandResponse> tempResponses = new ArrayList<>();
+            for (Category category : categories) {
+                List<ProductLowestPriceAndBrandResponse> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
+                if (productLowestPriceAndBrandResponses.size() == 0) {
+                    continue;
+                }
+
+                if (productLowestPriceAndBrandResponses != null) {
+                    tempResponses.add(productLowestPriceAndBrandResponses.get(0));
+                }
+            }
+            responses.add(tempResponses.stream()
+                    .map()
+                    .collect(Collectors.toList()).get(0));
+
+        }
+
+        return tempResponses.
+    }
+
 }

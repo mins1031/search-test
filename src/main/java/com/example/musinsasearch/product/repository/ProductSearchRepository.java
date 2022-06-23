@@ -1,12 +1,16 @@
 package com.example.musinsasearch.product.repository;
 
 import com.example.musinsasearch.product.domain.Product;
+import com.example.musinsasearch.product.dto.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.QProductLowestPriceAndBrandResponse;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.example.musinsasearch.brand.domain.QBrand.brand;
 import static com.example.musinsasearch.product.domain.QProduct.product;
 
 @Repository
@@ -32,11 +36,18 @@ public class ProductSearchRepository {
         return products;
     }
 
-    public List<Product> findByAll() {
-        List<Product> products = jpaQueryFactory.selectFrom(product).fetch();
+    public List<ProductLowestPriceAndBrandResponse> searchLowestPriceAndOneBrandInAllBrand(Long categoryNum, Long brandNum) {
+        List<ProductLowestPriceAndBrandResponse> results = jpaQueryFactory.select(new QProductLowestPriceAndBrandResponse(brand.name, product.price.min()))
+                .from(product)
+                .distinct()
+                .innerJoin(product.brand, brand).fetchJoin()
+                .where(product.category.num.eq(categoryNum).and(product.brand.num.eq(brandNum)))
+                .fetch();
 
-        return products;
+        return results;
     }
+
+
 
 
 }

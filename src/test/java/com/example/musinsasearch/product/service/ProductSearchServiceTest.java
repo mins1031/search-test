@@ -1,15 +1,11 @@
 package com.example.musinsasearch.product.service;
 
-import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
-import com.example.musinsasearch.common.BrandTestHelper;
-import com.example.musinsasearch.common.CategoryTestHelper;
 import com.example.musinsasearch.common.SearchDataHelper;
-import com.example.musinsasearch.product.domain.Product;
-import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponse;
 import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponses;
+import com.example.musinsasearch.product.dto.ProductLowestPriceAndBrandResponse;
 import com.example.musinsasearch.product.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -52,4 +47,21 @@ class ProductSearchServiceTest {
 
         Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses()).hasSize(categories.size());
     }
+
+    @DisplayName("한 브랜드에서 카테고리 상품중 최저가 상품의 합이 최소인 브랜드와 가격 조회")
+    @Test
+    public void 브랜드_카테고리별_상품최저가합_최저가_검색() {
+        //given
+        SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        int expectPrice = 36100;
+        String brandName = "D";
+
+        //when
+        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceAndOneBrandInAllBrand();
+
+        //then
+        Assertions.assertThat(response.getLowestAllProductSumPrice()).isEqualTo(expectPrice);
+        Assertions.assertThat(response.getLowestBrandName()).isEqualTo(brandName);
+    }
+
 }
