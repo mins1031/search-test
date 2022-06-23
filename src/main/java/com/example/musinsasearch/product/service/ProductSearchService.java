@@ -74,7 +74,6 @@ public class ProductSearchService {
     public ProductLowestPriceAndBrandResponse searchLowestPriceAndOneBrandInAllBrand() {
         List<Brand> brands = brandRepository.findAll();
         List<Category> categories = categoryRepository.findAll();
-        List<ProductLowestPriceAndBrandResponse> tempResponses = new ArrayList<>();
 
         ProductLowestPriceAndBrandResponse productLowestPriceAndBrandResponse = filterLowestPriceFromCategoryAndBrand(brands, categories);
 
