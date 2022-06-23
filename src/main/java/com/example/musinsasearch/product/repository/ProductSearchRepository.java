@@ -1,5 +1,6 @@
 package com.example.musinsasearch.product.repository;
 
+import com.example.musinsasearch.product.domain.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import static com.example.musinsasearch.product.domain.QProduct.product;
 public class ProductSearchRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<Integer> findByProductPricesByCategory() {
+    public List<Integer> searchProductLowestPricesByCategory() {
         List<Integer> products = jpaQueryFactory.select(product.price.min())
                 .from(product)
                 .groupBy(product.category)
@@ -30,4 +31,12 @@ public class ProductSearchRepository {
 
         return products;
     }
+
+    public List<Product> findByAll() {
+        List<Product> products = jpaQueryFactory.selectFrom(product).fetch();
+
+        return products;
+    }
+
+
 }

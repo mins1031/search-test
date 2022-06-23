@@ -36,4 +36,14 @@ public class Product extends BasicEntity {
     public static Product createProduct(String name, int price, Brand brand, Category category) {
         return new Product(name, price, brand, category);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", brand=" + brand +
+                ", category=" + category +
+                '}';
+    }
 }

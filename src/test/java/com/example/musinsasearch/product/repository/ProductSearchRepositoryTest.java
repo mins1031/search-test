@@ -23,14 +23,11 @@ class ProductSearchRepositoryTest {
         //given
         //when
         long startTime = System.currentTimeMillis();
-        List<Integer> byProductPricesByCategory = productSearchRepository.findByProductPricesByCategory();
+        productSearchRepository.searchProductLowestPricesByCategory();
         long endTime = System.currentTimeMillis();
         System.out.println("걸린 시간: " + (endTime - startTime));
 
         //then
-        for (Integer integer : byProductPricesByCategory) {
-            System.out.println(integer);
-        }
     }
 
     @Test
