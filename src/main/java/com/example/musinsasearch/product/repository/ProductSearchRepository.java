@@ -1,5 +1,6 @@
 package com.example.musinsasearch.product.repository;
 
+import com.example.musinsasearch.product.domain.Product;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,12 @@ public class ProductSearchRepository {
 
         return products;
     }
+
+    public List<Product> findByAll() {
+        List<Product> products = jpaQueryFactory.selectFrom(product).fetch();
+
+        return products;
+    }
+
+
 }
