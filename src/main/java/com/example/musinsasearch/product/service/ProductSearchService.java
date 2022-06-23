@@ -84,23 +84,28 @@ public class ProductSearchService {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
         for (Brand brand : brands) {
-            List<Integer> lowestPricesByBrand = new ArrayList<>();
-            for (Category category : categories) {
-                List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
-                if (productLowestPriceAndBrandResponses.size() == 0) {
-                    continue;
-                }
-
-                if (productLowestPriceAndBrandResponses != null) {
-                    lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
-                }
-            }
+            List<Integer> lowestPricesByBrand = searchEachCategoryLowestPrices(categories, brand);
             ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), lowestPricesByBrand.stream().reduce(Integer::sum).get());
             responses.add(totalLowestPrice);
         }
 
-        return responses.stream()
-                .min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice)).get();
+        return responses.stream().min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice)).get();
+    }
+
+    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
+        List<Integer> lowestPricesByBrand = new ArrayList<>();
+        for (Category category : categories) {
+            List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
+            if (productLowestPriceAndBrandResponses.size() == 0) {
+                continue;
+            }
+
+            if (productLowestPriceAndBrandResponses != null) {
+                lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
+            }
+        }
+
+        return lowestPricesByBrand;
     }
 
 }
