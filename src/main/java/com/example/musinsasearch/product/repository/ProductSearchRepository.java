@@ -36,11 +36,10 @@ public class ProductSearchRepository {
         return products;
     }
 
-    public List<ProductLowestPriceAndBrandResponse> searchLowestPriceAndOneBrandInAllBrand(Long categoryNum, Long brandNum) {
-        List<ProductLowestPriceAndBrandResponse> results = jpaQueryFactory.select(new QProductLowestPriceAndBrandResponse(brand.name, product.price.min()))
+    public List<Integer> searchLowestPriceAndOneBrandInAllBrand(Long categoryNum, Long brandNum) {
+        List<Integer> results = jpaQueryFactory.select(product.price.min())
                 .from(product)
                 .distinct()
-                .innerJoin(product.brand, brand).fetchJoin()
                 .where(product.category.num.eq(categoryNum).and(product.brand.num.eq(brandNum)))
                 .fetch();
 

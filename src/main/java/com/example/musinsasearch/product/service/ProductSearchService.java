@@ -76,34 +76,32 @@ public class ProductSearchService {
         List<Category> categories = categoryRepository.findAll();
         List<ProductLowestPriceAndBrandResponse> tempResponses = new ArrayList<>();
 
-        filterLowestPriceFromCategoryAndBrand(brands, categories);
+        ProductLowestPriceAndBrandResponse productLowestPriceAndBrandResponse = filterLowestPriceFromCategoryAndBrand(brands, categories);
 
-
-        return null;
+        return productLowestPriceAndBrandResponse;
     }
 
-    private void filterLowestPriceFromCategoryAndBrand(List<Brand> brands, List<Category> categories) {
+    private ProductLowestPriceAndBrandResponse filterLowestPriceFromCategoryAndBrand(List<Brand> brands, List<Category> categories) {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
         for (Brand brand : brands) {
-            List<ProductLowestPriceAndBrandResponse> tempResponses = new ArrayList<>();
+            List<Integer> lowestPricesByBrand = new ArrayList<>();
             for (Category category : categories) {
-                List<ProductLowestPriceAndBrandResponse> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
+                List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
                 if (productLowestPriceAndBrandResponses.size() == 0) {
                     continue;
                 }
 
                 if (productLowestPriceAndBrandResponses != null) {
-                    tempResponses.add(productLowestPriceAndBrandResponses.get(0));
+                    lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
                 }
             }
-            responses.add(tempResponses.stream()
-                    .map()
-                    .collect(Collectors.toList()).get(0));
-
+            ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), lowestPricesByBrand.stream().reduce(Integer::sum).get());
+            responses.add(totalLowestPrice);
         }
 
-        return tempResponses.
+        return responses.stream()
+                .min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice)).get();
     }
 
 }
