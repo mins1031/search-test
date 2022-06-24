@@ -1,4 +1,2 @@
-GET http://localhost:8080/products/categories-min-price
+GET http://localhost:8080/products/categories-low-price
 Content-Type: application/json
-
-

@@ -1,4 +1,4 @@
-package com.example.musinsasearch.product.dto;
+package com.example.musinsasearch.product.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
@@ -11,7 +11,6 @@ public class ProductLowestPriceAndBrandResponse {
     private String lowestBrandName;
     private int lowestAllProductSumPrice;
 
-    @QueryProjection
     public ProductLowestPriceAndBrandResponse(String lowestBrandName, int lowestAllProductSumPrice) {
         this.lowestBrandName = lowestBrandName;
         this.lowestAllProductSumPrice = lowestAllProductSumPrice;

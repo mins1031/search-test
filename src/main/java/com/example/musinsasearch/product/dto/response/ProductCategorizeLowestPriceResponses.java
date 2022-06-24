@@ -1,4 +1,4 @@
-package com.example.musinsasearch.product.dto;
+package com.example.musinsasearch.product.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
