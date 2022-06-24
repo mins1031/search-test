@@ -22,7 +22,7 @@ public class ProductSearchController {
 
     @GetMapping(ProductSearchControllerPath.ALL_CATEGORY_MIN_PRICES_BY_BRAND)
     public RestResponse<ProductLowestPriceAndBrandResponse> searchLowestPriceAndOneBrandInAllBrand() {
-        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceAndOneBrandInAllBrand();
+        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceInAllBrand();
         return RestResponse.of(HttpStatus.OK, response);
     }
 

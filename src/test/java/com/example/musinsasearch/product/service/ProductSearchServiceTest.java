@@ -57,7 +57,7 @@ class ProductSearchServiceTest {
         String brandName = "D";
 
         //when
-        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceAndOneBrandInAllBrand();
+        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceInAllBrand();
 
         //then
         Assertions.assertThat(response.getLowestAllProductSumPrice()).isEqualTo(expectPrice);

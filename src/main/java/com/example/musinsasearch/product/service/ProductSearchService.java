@@ -15,11 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,7 +69,7 @@ public class ProductSearchService {
     }
 
     @Transactional(readOnly = true)
-    public ProductLowestPriceAndBrandResponse searchLowestPriceAndOneBrandInAllBrand() {
+    public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
         List<Brand> brands = brandRepository.findAll();
         List<Category> categories = categoryRepository.findAll();
 
@@ -85,7 +83,8 @@ public class ProductSearchService {
 
         for (Brand brand : brands) {
             List<Integer> lowestPricesByBrand = searchEachCategoryLowestPrices(categories, brand);
-            ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), lowestPricesByBrand.stream().reduce(Integer::sum).get());
+            Integer sumPriceByBrand = lowestPricesByBrand.stream().reduce(Integer::sum).get();
+            ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), sumPriceByBrand);
             responses.add(totalLowestPrice);
         }
 
@@ -95,7 +94,7 @@ public class ProductSearchService {
     private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
         List<Integer> lowestPricesByBrand = new ArrayList<>();
         for (Category category : categories) {
-            List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.searchLowestPriceAndOneBrandInAllBrand(category.getNum(), brand.getNum());
+            List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
             if (productLowestPriceAndBrandResponses.size() == 0) {
                 continue;
             }
@@ -106,6 +105,12 @@ public class ProductSearchService {
         }
 
         return lowestPricesByBrand;
+    }
+
+    @Transactional(readOnly = true)
+    public ProductLowestPriceAndBrandResponse searchLowestPriceAndHighest() {
+
+        return null;
     }
 
 }
