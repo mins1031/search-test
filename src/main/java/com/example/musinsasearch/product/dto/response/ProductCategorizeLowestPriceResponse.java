@@ -1,4 +1,4 @@
-package com.example.musinsasearch.product.dto;
+package com.example.musinsasearch.product.dto.response;
 
 import com.example.musinsasearch.product.domain.Product;
 import com.querydsl.core.annotations.QueryProjection;

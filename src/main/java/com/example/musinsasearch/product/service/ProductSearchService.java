@@ -4,10 +4,15 @@ import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
+import com.example.musinsasearch.common.exception.ImpossibleException;
+import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.product.domain.Product;
-import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponse;
-import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponses;
-import com.example.musinsasearch.product.dto.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
+import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponse;
+import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
+import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
+import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
 import com.example.musinsasearch.product.repository.ProductRepository;
 import com.example.musinsasearch.product.repository.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
@@ -108,9 +113,44 @@ public class ProductSearchService {
     }
 
     @Transactional(readOnly = true)
-    public ProductLowestPriceAndBrandResponse searchLowestPriceAndHighest() {
+    public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(Long categoryNum) {
+        List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(categoryNum);
+        //유호성 검사 로직 클래스로 분리할것.
+        if (rawDtos.isEmpty()) {
+            throw new SearchResultEmptyException();
+        }
 
-        return null;
+        int maxPriceDto = extractHighestPriceFromRawDtos(rawDtos);
+        int minPriceDto = extractLowestPriceFromRawDtos(rawDtos);
+
+        ProductLowestAndHighestPriceResponses productLowestAndHighestPriceResponses = new ProductLowestAndHighestPriceResponses(
+                convertRawDtoToResponse(rawDtos, minPriceDto),
+                convertRawDtoToResponse(rawDtos, maxPriceDto)
+        );
+
+        return productLowestAndHighestPriceResponses;
+    }
+
+    private List<ProductPriceAndBrandResponse> convertRawDtoToResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int maxPriceDto) {
+        List<ProductPriceAndBrandResponse> tempList = new ArrayList<>();
+
+        for (ProductLowestAndHighestPriceRawDto rawDto : rawDtos) {
+            if (rawDto.getHighestPrice() == maxPriceDto) {
+                tempList.add(ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), maxPriceDto));
+            }
+        }
+
+        return tempList;
+    }
+
+    private int extractHighestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
+        ProductLowestAndHighestPriceRawDto highestRawDto = rawDtos.stream().max(Comparator.comparing(ProductLowestAndHighestPriceRawDto::getHighestPrice)).orElseThrow(() -> new ImpossibleException("검색한 데이터중 최대값을 구하지 못했습니다."));
+        return highestRawDto.getHighestPrice();
+    }
+
+    private int extractLowestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
+        ProductLowestAndHighestPriceRawDto lowestRawDto = rawDtos.stream().min(Comparator.comparing(ProductLowestAndHighestPriceRawDto::getLowestPrice)).orElseThrow(() -> new ImpossibleException("검색한 데이터중 최소값을 구하지 못했습니다."));
+        return lowestRawDto.getLowestPrice();
     }
 
 }

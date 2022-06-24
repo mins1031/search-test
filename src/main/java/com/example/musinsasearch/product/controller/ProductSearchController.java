@@ -1,8 +1,8 @@
 package com.example.musinsasearch.product.controller;
 
 import com.example.musinsasearch.common.response.RestResponse;
-import com.example.musinsasearch.product.dto.ProductCategorizeLowestPriceResponses;
-import com.example.musinsasearch.product.dto.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
+import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
 import com.example.musinsasearch.product.service.ProductSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
