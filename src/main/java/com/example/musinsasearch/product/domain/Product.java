@@ -17,7 +17,8 @@ import javax.persistence.Table;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(indexes = {
-        @Index(name = "idx_brand_category", columnList = "category_num, brand_num")
+        @Index(name = "idx_brand_category", columnList = "brand_num, category_num"),
+        @Index(name = "idx_category", columnList = "category_num")
 })
 public class Product extends BasicEntity {
 
@@ -47,8 +48,6 @@ public class Product extends BasicEntity {
         return "Product{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
-                ", brand=" + brand +
-                ", category=" + category +
                 '}';
     }
 }

@@ -76,10 +76,10 @@ class ProductSearchServiceTest {
         String highestBrand = "I";
 
         List<Category> categories = categoryRepository.findAll();
-        Long categoryNum = categories.get(0).getNum();
+        String categoryName = categories.get(0).getName();
 
         //when
-        ProductLowestAndHighestPriceResponses productLowestAndHighestPriceResponses = productSearchService.searchLowestAndHighestProductByCategory(categoryNum);
+        ProductLowestAndHighestPriceResponses productLowestAndHighestPriceResponses = productSearchService.searchLowestAndHighestProductByCategory(categoryName);
 
         //then
         Assertions.assertThat(productLowestAndHighestPriceResponses.getLowestResponses()).hasSize(1);

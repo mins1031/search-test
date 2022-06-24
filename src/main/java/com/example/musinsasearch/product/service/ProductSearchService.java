@@ -3,9 +3,11 @@ package com.example.musinsasearch.product.service;
 import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
+import com.example.musinsasearch.category.exception.NotExistCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.exception.ImpossibleException;
 import com.example.musinsasearch.common.exception.SearchResultEmptyException;
+import com.example.musinsasearch.common.validator.RequestAndResultValidator;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
@@ -55,23 +57,23 @@ public class ProductSearchService {
         return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsByLowestPrice));
     }
 
-    @Transactional(readOnly = true)
-    public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory2() {
-        long startTime = System.currentTimeMillis();
-
-        List<Product> allProducts = productRepository.findAll();
-        Map<Category, List<Product>> categoryListMap = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory));
-
-        List<Product> productsGroupByCategory = categoryListMap.values().stream()
-                .map(values -> values.stream().min(Comparator.comparing(Product::getPrice)).orElse(null))
-                .sorted(Comparator.comparing(product -> product.getCategory().getNum()))
-                .collect(Collectors.toList());
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("걸린 시간: " + (endTime - startTime));
-
-        return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsGroupByCategory));
-    }
+//    @Transactional(readOnly = true)
+//    public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory2() {
+//        long startTime = System.currentTimeMillis();
+//
+//        List<Product> allProducts = productRepository.findAll();
+//        Map<Category, List<Product>> categoryListMap = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory));
+//
+//        List<Product> productsGroupByCategory = categoryListMap.values().stream()
+//                .map(values -> values.stream().min(Comparator.comparing(Product::getPrice)).orElse(null))
+//                .sorted(Comparator.comparing(product -> product.getCategory().getNum()))
+//                .collect(Collectors.toList());
+//
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("걸린 시간: " + (endTime - startTime));
+//
+//        return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsGroupByCategory));
+//    }
 
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
@@ -104,31 +106,26 @@ public class ProductSearchService {
                 continue;
             }
 
-            if (productLowestPriceAndBrandResponses != null) {
-                lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
-            }
+            lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
         }
 
         return lowestPricesByBrand;
     }
 
     @Transactional(readOnly = true)
-    public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(Long categoryNum) {
-        List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(categoryNum);
-        //유호성 검사 로직 클래스로 분리할것.
-        if (rawDtos.isEmpty()) {
-            throw new SearchResultEmptyException();
-        }
+    public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(String categoryName) {
+        RequestAndResultValidator.verifyStringParameter(categoryName);
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(NotExistCategoryException::new);
+        List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(category.getNum());
+        RequestAndResultValidator.verifyEmptyCollection(rawDtos);
 
         int maxPriceDto = extractHighestPriceFromRawDtos(rawDtos);
         int minPriceDto = extractLowestPriceFromRawDtos(rawDtos);
 
-        ProductLowestAndHighestPriceResponses productLowestAndHighestPriceResponses = new ProductLowestAndHighestPriceResponses(
+        return new ProductLowestAndHighestPriceResponses(
                 convertRawDtoToResponse(rawDtos, minPriceDto),
                 convertRawDtoToResponse(rawDtos, maxPriceDto)
         );
-
-        return productLowestAndHighestPriceResponses;
     }
 
     private List<ProductPriceAndBrandResponse> convertRawDtoToResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int maxPriceDto) {
