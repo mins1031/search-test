@@ -119,25 +119,10 @@ public class ProductSearchService {
         List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(category.getNum());
         RequestAndResultValidator.verifyEmptyCollection(rawDtos);
 
-        int maxPriceDto = extractHighestPriceFromRawDtos(rawDtos);
-        int minPriceDto = extractLowestPriceFromRawDtos(rawDtos);
+        int maxPrice = extractHighestPriceFromRawDtos(rawDtos);
+        int minPrice = extractLowestPriceFromRawDtos(rawDtos);
 
-        return new ProductLowestAndHighestPriceResponses(
-                convertRawDtoToResponse(rawDtos, minPriceDto),
-                convertRawDtoToResponse(rawDtos, maxPriceDto)
-        );
-    }
-
-    private List<ProductPriceAndBrandResponse> convertRawDtoToResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int maxPriceDto) {
-        List<ProductPriceAndBrandResponse> tempList = new ArrayList<>();
-
-        for (ProductLowestAndHighestPriceRawDto rawDto : rawDtos) {
-            if (rawDto.getHighestPrice() == maxPriceDto) {
-                tempList.add(ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), maxPriceDto));
-            }
-        }
-
-        return tempList;
+        return new ProductLowestAndHighestPriceResponses(convertRawDtoToLowestResponse(rawDtos, minPrice), convertRawDtoToHighestResponse(rawDtos, maxPrice));
     }
 
     private int extractHighestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
@@ -148,6 +133,24 @@ public class ProductSearchService {
     private int extractLowestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
         ProductLowestAndHighestPriceRawDto lowestRawDto = rawDtos.stream().min(Comparator.comparing(ProductLowestAndHighestPriceRawDto::getLowestPrice)).orElseThrow(() -> new ImpossibleException("검색한 데이터중 최소값을 구하지 못했습니다."));
         return lowestRawDto.getLowestPrice();
+    }
+
+    private List<ProductPriceAndBrandResponse> convertRawDtoToLowestResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int lowestPrice) {
+        List<ProductPriceAndBrandResponse> lowestResponses = rawDtos.stream()
+                .filter(rawDto -> rawDto.getLowestPrice() == lowestPrice)
+                .map(rawDto -> ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), rawDto.getLowestPrice()))
+                .collect(Collectors.toList());
+
+        return lowestResponses;
+    }
+
+    private List<ProductPriceAndBrandResponse> convertRawDtoToHighestResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int highestPrice) {
+        List<ProductPriceAndBrandResponse> highestResponses = rawDtos.stream()
+                .filter(rawDto -> rawDto.getHighestPrice() == highestPrice)
+                .map(rawDto -> ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), rawDto.getHighestPrice()))
+                .collect(Collectors.toList());
+
+        return highestResponses;
     }
 
 }

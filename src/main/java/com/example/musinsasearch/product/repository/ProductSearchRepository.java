@@ -37,7 +37,7 @@ public class ProductSearchRepository {
     }
 
     public List<ProductLowestAndHighestPriceRawDto>  searchLowestPriceAndHighest(Long categoryNum) {
-        List<ProductLowestAndHighestPriceRawDto> results = jpaQueryFactory.select(new QProductLowestAndHighestPriceRawDto(product.brand.num, product.brand.name, product.price.max(), product.price.min()))
+        List<ProductLowestAndHighestPriceRawDto> results = jpaQueryFactory.select(new QProductLowestAndHighestPriceRawDto(product.brand.num, product.brand.name, product.price.min(), product.price.max()))
                 .from(product)
                 .innerJoin(product.brand, brand)
                 .where(product.category.num.eq(categoryNum))

@@ -1,0 +1,2 @@
+GET http://localhost:8080/products/low-high-price/상의
+Content-Type: application/json
