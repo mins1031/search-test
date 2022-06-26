@@ -1,0 +1,9 @@
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "productName":  "brandName",
+  "productPrice": 10000,
+  "brandNum":  1,
+  "categoryNum": 1
+}
