@@ -2,8 +2,11 @@ package com.example.musinsasearch.product.service;
 
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
+import com.example.musinsasearch.category.exception.NotExistCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.SearchDataHelper;
+import com.example.musinsasearch.common.exception.SearchResultEmptyException;
+import com.example.musinsasearch.common.exception.WrongParameterException;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
@@ -89,6 +92,39 @@ class ProductSearchServiceTest {
         Assertions.assertThat(productLowestAndHighestPriceResponses.getHighestResponses()).hasSize(1);
         Assertions.assertThat(productLowestAndHighestPriceResponses.getHighestResponses().get(0).getBrandName()).isEqualTo(highestBrand);
         Assertions.assertThat(productLowestAndHighestPriceResponses.getHighestResponses().get(0).getProductPrice()).isEqualTo(highestPrice);
+    }
+
+    @DisplayName("[예외] 카테고리에서 최대가와 브랜드, 최소가와 브랜드 조회시 존재하지 않는 카테고리 이름이 요청된다.")
+    @Test
+    public void 예외_존재하지않는_카테고리_이름_요청() {
+        //given
+        SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        String notExistCategoryName = "없는 카테고리 이름";
+
+        //when & then
+        Assertions.assertThatThrownBy(() -> productSearchService.searchLowestAndHighestProductByCategory(notExistCategoryName)).isInstanceOf(NotExistCategoryException.class);
+    }
+
+    @DisplayName("[예외] 카테고리에서 최대가와 브랜드, 최소가와 브랜드 조회시 파라미터가 부적절하다")
+    @Test
+    public void 예외_잘못된_카테고리_이름_요청() {
+        //given
+        SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        String wrongParameter = "";
+
+        //when & then
+        Assertions.assertThatThrownBy(() -> productSearchService.searchLowestAndHighestProductByCategory(wrongParameter)).isInstanceOf(WrongParameterException.class);
+    }
+
+    @DisplayName("[예외] 카테고리에서 최대가와 브랜드, 최소가와 브랜드 조회시 파라미터로 조회한 제품이 없는경우")
+    @Test
+    public void 예외카테고리_최대가_최소가_브랜드_검색() {
+        //given
+        SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        Category newCategory = categoryRepository.save(Category.createCategory("newCategory"));
+
+        //when & then
+        Assertions.assertThatThrownBy(() -> productSearchService.searchLowestAndHighestProductByCategory(newCategory.getName())).isInstanceOf(SearchResultEmptyException.class);
     }
 
 }

@@ -79,12 +79,12 @@ public class ProductSearchService {
     private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
         List<Integer> lowestPricesByBrand = new ArrayList<>();
         for (Category category : categories) {
-            List<Integer> productLowestPriceAndBrandResponses = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
-            if (productLowestPriceAndBrandResponses.size() == 0) {
+            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
+            if (lowestPriceInBrandAndCategory == null) {
                 continue;
             }
 
-            lowestPricesByBrand.add(productLowestPriceAndBrandResponses.get(0));
+            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
         }
 
         return lowestPricesByBrand;

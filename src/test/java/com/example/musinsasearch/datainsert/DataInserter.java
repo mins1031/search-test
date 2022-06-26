@@ -6,10 +6,8 @@ import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.repository.ProductRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -141,35 +139,10 @@ public class DataInserter {
         productRepository.save(Product.createProduct("모자9", 1700, i, 모자));
         productRepository.save(Product.createProduct("양말9", 1700, i, 양말));
         productRepository.save(Product.createProduct("액세서리9", 2400, i, 액세서리));
-
-
-        //1. select min(price) from product group by category_num
-        //2. select b.num, b.name, sum(p.price) sum_price from product as p join brand as b on p.brand_num = b.num group by p.brand_num 후 price로
-        //3. select b.name, max(p.price) max_prices, min(p.price) min_price from product as p join brand as b on p.brand_num = b.num where category_num group by brand_num order by prices desc;
-        // -> 이름값으로 먼저 카테고리 조회한다음 해당 쿼리로 카테고리 num줘야할듯.
-
     }
 
-    @Test
+//    @Test
     public void 데이터_입력_대용량() {
-        카테고리_브랜드_등록();
-
-        //상품
-        List<Category> categories = categoryRepository.findAll();
-        List<Brand> brands = brandRepository.findAll();
-
-        for (Brand brand : brands) {
-            for (Category category : categories) {
-                for (int index = 0; index < 15000; index++) {
-                    int randomPrice = (int) ((Math.random() * (50000 - 10000)) + 10000);
-                    productRepository.save(Product.createProduct(UUID.randomUUID().toString().substring(0, 8), randomPrice, brand, category));
-                }
-            }
-        }
-    }
-
-    @Transactional
-    public void 카테고리_브랜드_등록() {
         //카테고리
         Category 상의 = categoryRepository.save(Category.createCategory("상의"));
         Category 아우터 = categoryRepository.save(Category.createCategory("아우터"));
@@ -190,5 +163,18 @@ public class DataInserter {
         Brand g = brandRepository.save(Brand.createBrand("G"));
         Brand h = brandRepository.save(Brand.createBrand("H"));
         Brand i = brandRepository.save(Brand.createBrand("I"));
+
+        //상품
+        List<Category> categories = categoryRepository.findAll();
+        List<Brand> brands = brandRepository.findAll();
+
+        for (Brand brand : brands) {
+            for (Category category : categories) {
+                for (int index = 0; index < 15000; index++) {
+                    int randomPrice = (int) ((Math.random() * (50000 - 10000)) + 10000);
+                    productRepository.save(Product.createProduct(UUID.randomUUID().toString().substring(0, 8), randomPrice, brand, category));
+                }
+            }
+        }
     }
 }
