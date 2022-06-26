@@ -1,12 +1,12 @@
-package com.example.musinsasearch.product.controller;
+package com.example.musinsasearch.product.service;
 
 import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
-import com.example.musinsasearch.common.BrandCreateHelper;
-import com.example.musinsasearch.common.CategoryCreateHelper;
-import com.example.musinsasearch.common.ProductCreateHelper;
+import com.example.musinsasearch.common.helper.BrandCreateHelper;
+import com.example.musinsasearch.common.helper.CategoryCreateHelper;
+import com.example.musinsasearch.common.helper.ProductCreateHelper;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.request.ProductCreateRequest;
 import com.example.musinsasearch.product.dto.request.ProductDeleteRequest;

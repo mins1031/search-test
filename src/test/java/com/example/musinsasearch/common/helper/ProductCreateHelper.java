@@ -1,4 +1,4 @@
-package com.example.musinsasearch.common;
+package com.example.musinsasearch.common.helper;
 
 import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.category.domain.Category;

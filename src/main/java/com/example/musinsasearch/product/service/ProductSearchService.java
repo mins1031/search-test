@@ -32,7 +32,7 @@ public class ProductSearchService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
-    //
+    //모든 카테고의 상품을 브랜드별로 자유롭 선택해 모든 상품을 구매할때 최저 조회 API
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.findLowestPriceByAllCategory();
@@ -41,6 +41,7 @@ public class ProductSearchService {
         return new ProductCategorizeLowestPriceResponses(productCategorizeLowestPriceResponses);
     }
 
+    //카테고리와 최저가 정보를 통해 각 카테고리의 최저가 상품 리스트 생성.
     private List<ProductCategorizeLowestPriceResponse> combineProductRawDtos(List<ProductLowestPriceByCategoryRawDto> productRawDtos) {
         List<ProductCategorizeLowestPriceResponse> productResponses = new ArrayList<>();
 
@@ -54,6 +55,7 @@ public class ProductSearchService {
         return productResponses;
     }
 
+    //한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
         List<Brand> brands = brandRepository.findAll();

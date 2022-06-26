@@ -2,7 +2,7 @@ package com.example.musinsasearch.product.repository;
 
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.repository.CategoryRepository;
-import com.example.musinsasearch.common.SearchDataHelper;
+import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
 import org.assertj.core.api.Assertions;

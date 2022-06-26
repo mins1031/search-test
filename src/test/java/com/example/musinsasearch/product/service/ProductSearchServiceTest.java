@@ -4,7 +4,7 @@ import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.exception.NotFoundCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
-import com.example.musinsasearch.common.SearchDataHelper;
+import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.exception.WrongParameterException;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
