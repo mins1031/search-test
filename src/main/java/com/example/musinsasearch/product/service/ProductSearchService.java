@@ -3,11 +3,11 @@ package com.example.musinsasearch.product.service;
 import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
-import com.example.musinsasearch.category.exception.NotExistCategoryException;
+import com.example.musinsasearch.category.exception.NotFoundCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.exception.ImpossibleException;
 import com.example.musinsasearch.common.validator.RequestAndResultValidator;
-import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.response.ProductPriceAndBrandResponse;
 import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
@@ -32,6 +32,7 @@ public class ProductSearchService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
+    //
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.findLowestPriceByAllCategory();
@@ -93,14 +94,14 @@ public class ProductSearchService {
     @Transactional(readOnly = true)
     public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(String categoryName) {
         RequestAndResultValidator.verifyStringParameter(categoryName);
-        Category category = categoryRepository.findByName(categoryName).orElseThrow(NotExistCategoryException::new);
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(NotFoundCategoryException::new);
         List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(category.getNum());
         RequestAndResultValidator.verifyEmptyCollection(rawDtos);
 
-        int maxPrice = extractHighestPriceFromRawDtos(rawDtos);
-        int minPrice = extractLowestPriceFromRawDtos(rawDtos);
+        int highestPrice = extractHighestPriceFromRawDtos(rawDtos);
+        int lowestPrice = extractLowestPriceFromRawDtos(rawDtos);
 
-        return new ProductLowestAndHighestPriceResponses(convertRawDtoToLowestResponse(rawDtos, minPrice), convertRawDtoToHighestResponse(rawDtos, maxPrice));
+        return new ProductLowestAndHighestPriceResponses(convertRawDtoToLowestResponse(rawDtos, lowestPrice), convertRawDtoToHighestResponse(rawDtos, highestPrice));
     }
 
     private int extractHighestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
