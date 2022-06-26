@@ -66,6 +66,7 @@ public class ProductSearchService {
         return productLowestPriceAndBrandResponse;
     }
 
+    //브랜드별 각 카테고리의 최저가를 조회, 더한후 최저가 추출.
     private ProductLowestPriceAndBrandResponse filterLowestPriceFromCategoryAndBrand(List<Brand> brands, List<Category> categories) {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
@@ -79,6 +80,7 @@ public class ProductSearchService {
         return responses.stream().min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice)).get();
     }
 
+    //브랜드의 각 카테고리별 최저가 조회.
     private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
         List<Integer> lowestPricesByBrand = new ArrayList<>();
         for (Category category : categories) {
@@ -93,10 +95,12 @@ public class ProductSearchService {
         return lowestPricesByBrand;
     }
 
+    //각 카테고리 이름으로 최소, 최대 가격조회 API
     @Transactional(readOnly = true)
     public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(String categoryName) {
         RequestAndResultValidator.verifyStringParameter(categoryName);
         Category category = categoryRepository.findByName(categoryName).orElseThrow(NotFoundCategoryException::new);
+        //카테고리에 맞는 브랜드별 최저,최고가 및 브랜드 정보 조회
         List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(category.getNum());
         RequestAndResultValidator.verifyEmptyCollection(rawDtos);
 
@@ -106,16 +110,19 @@ public class ProductSearchService {
         return new ProductLowestAndHighestPriceResponses(convertRawDtoToLowestResponse(rawDtos, lowestPrice), convertRawDtoToHighestResponse(rawDtos, highestPrice));
     }
 
+    //검색된 브랜드별 최저,최고가 목록에서 최고가 추출
     private int extractHighestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
         ProductLowestAndHighestPriceRawDto highestRawDto = rawDtos.stream().max(Comparator.comparing(ProductLowestAndHighestPriceRawDto::getHighestPrice)).orElseThrow(() -> new ImpossibleException("검색한 데이터중 최대값을 구하지 못했습니다."));
         return highestRawDto.getHighestPrice();
     }
 
+    //검색된 브랜드별 최저,최고가 목록에서 최저가 추출
     private int extractLowestPriceFromRawDtos(List<ProductLowestAndHighestPriceRawDto> rawDtos) {
         ProductLowestAndHighestPriceRawDto lowestRawDto = rawDtos.stream().min(Comparator.comparing(ProductLowestAndHighestPriceRawDto::getLowestPrice)).orElseThrow(() -> new ImpossibleException("검색한 데이터중 최소값을 구하지 못했습니다."));
         return lowestRawDto.getLowestPrice();
     }
 
+    //추출된 최저가 와 동일한 데이터를 찾아 응답객체로 변환
     private List<ProductPriceAndBrandResponse> convertRawDtoToLowestResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int lowestPrice) {
         List<ProductPriceAndBrandResponse> lowestResponses = rawDtos.stream()
                 .filter(rawDto -> rawDto.getLowestPrice() == lowestPrice)
@@ -125,6 +132,7 @@ public class ProductSearchService {
         return lowestResponses;
     }
 
+    //추출된 최고가 와 동일한 데이터를 찾아 응답객체로 변환
     private List<ProductPriceAndBrandResponse> convertRawDtoToHighestResponse(List<ProductLowestAndHighestPriceRawDto> rawDtos, int highestPrice) {
         List<ProductPriceAndBrandResponse> highestResponses = rawDtos.stream()
                 .filter(rawDto -> rawDto.getHighestPrice() == highestPrice)
