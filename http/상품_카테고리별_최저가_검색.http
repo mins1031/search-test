@@ -1,2 +1,294 @@
 GET http://localhost:8080/products/categories-low-price
 Content-Type: application/json
+
+#res
+#{
+#  "statusCode": "OK",
+#  "message": null,
+#  "result": {
+#    "productCategorizeLowestPriceResponses": [
+#      {
+#        "productNum": 11625,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 374776,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 369016,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 367408,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 608501,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 6,
+#        "brandName": "F",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 847829,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 972761,
+#        "categoryNum": 1,
+#        "categoryName": "상의",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 18352,
+#        "categoryNum": 2,
+#        "categoryName": "아우터",
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 147037,
+#        "categoryNum": 2,
+#        "categoryName": "아우터",
+#        "brandNum": 2,
+#        "brandName": "B",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 387625,
+#        "categoryNum": 2,
+#        "categoryName": "아우터",
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 505985,
+#        "categoryNum": 2,
+#        "categoryName": "아우터",
+#        "brandNum": 5,
+#        "brandName": "E",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 855388,
+#        "categoryNum": 2,
+#        "categoryName": "아우터",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 32397,
+#        "categoryNum": 3,
+#        "categoryName": "바지",
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 272511,
+#        "categoryNum": 3,
+#        "categoryName": "바지",
+#        "brandNum": 3,
+#        "brandName": "C",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 761081,
+#        "categoryNum": 3,
+#        "categoryName": "바지",
+#        "brandNum": 7,
+#        "brandName": "G",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 883373,
+#        "categoryNum": 3,
+#        "categoryName": "바지",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 295097,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 3,
+#        "brandName": "C",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 645050,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 6,
+#        "brandName": "F",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 648496,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 6,
+#        "brandName": "F",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 652579,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 6,
+#        "brandName": "F",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 887065,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 1008260,
+#        "categoryNum": 4,
+#        "categoryName": "스니커즈",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 423218,
+#        "categoryNum": 5,
+#        "categoryName": "가방",
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 792943,
+#        "categoryNum": 5,
+#        "categoryName": "가방",
+#        "brandNum": 7,
+#        "brandName": "G",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 1025454,
+#        "categoryNum": 5,
+#        "categoryName": "가방",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10001
+#      },
+#      {
+#        "productNum": 557764,
+#        "categoryNum": 6,
+#        "categoryName": "모자",
+#        "brandNum": 5,
+#        "brandName": "E",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 809331,
+#        "categoryNum": 6,
+#        "categoryName": "모자",
+#        "brandNum": 7,
+#        "brandName": "G",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 915836,
+#        "categoryNum": 6,
+#        "categoryName": "모자",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 102654,
+#        "categoryNum": 7,
+#        "categoryName": "양말",
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 332027,
+#        "categoryNum": 7,
+#        "categoryName": "양말",
+#        "brandNum": 3,
+#        "brandName": "C",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 939041,
+#        "categoryNum": 7,
+#        "categoryName": "양말",
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 1060887,
+#        "categoryNum": 7,
+#        "categoryName": "양말",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 1064061,
+#        "categoryNum": 7,
+#        "categoryName": "양말",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 587446,
+#        "categoryNum": 8,
+#        "categoryName": "액세서리",
+#        "brandNum": 5,
+#        "brandName": "E",
+#        "price": 10000
+#      },
+#      {
+#        "productNum": 1070711,
+#        "categoryNum": 8,
+#        "categoryName": "액세서리",
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "price": 10000
+#      }
+#    ]
+#  }
+#}
+#
+#Response code: 200; Time: 2685ms; Content length: 3645 bytes

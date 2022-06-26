@@ -39,14 +39,14 @@ class ProductSearchServiceTest {
     public void 카테고리별_상품_최저가_조회() {
         //given
         SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        //스니커즈는 최저가 9000이 A, G 두개
+        int resultCount = 9;
 
         //when
         ProductCategorizeLowestPriceResponses responses = productSearchService.searchProductLowestPricesByCategory();
 
         //then
-        List<Category> categories = categoryRepository.findAll();
-
-        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses()).hasSize(categories.size());
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses()).hasSize(resultCount);
     }
 
     @DisplayName("한 브랜드에서 카테고리 상품중 최저가 상품의 합이 최소인 브랜드와 가격 조회")
