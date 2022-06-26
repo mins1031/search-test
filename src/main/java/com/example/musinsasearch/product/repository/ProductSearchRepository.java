@@ -45,14 +45,14 @@ public class ProductSearchRepository {
         return productRawDtos;
     }
 
-    public List<Integer> findLowestPriceByCategoryAndBrand(Long categoryNum, Long brandNum) {
-        List<Integer> results = jpaQueryFactory.select(product.price.min())
+    public Integer findLowestPriceByCategoryAndBrand(Long categoryNum, Long brandNum) {
+        Integer result = jpaQueryFactory.select(product.price.min())
                 .from(product)
                 .distinct()
                 .where(product.category.num.eq(categoryNum).and(product.brand.num.eq(brandNum)))
-                .fetch();
+                .fetchOne();
 
-        return results;
+        return result;
     }
 
     public List<ProductLowestAndHighestPriceRawDto> searchLowestPriceAndHighest(Long categoryNum) {
