@@ -18,8 +18,8 @@ public class RestResponse<T> {
         this.result = result;
     }
 
-    public static <Void> RestResponse<Void> empty(HttpStatus statusCode) {
-        return new RestResponse<Void>(statusCode, null, null);
+    public static <Void> RestResponse<Void> error(HttpStatus code, String message) {
+        return new RestResponse<>(code, message, null);
     }
 
     public static <T> RestResponse<T> of(HttpStatus statusCode, T result) {
