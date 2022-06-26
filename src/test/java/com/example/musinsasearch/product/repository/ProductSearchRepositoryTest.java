@@ -3,6 +3,7 @@ package com.example.musinsasearch.product.repository;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.SearchDataHelper;
+import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -30,9 +31,9 @@ class ProductSearchRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @DisplayName("")
+    @DisplayName("각 카테고리의 최저가를 조회한다.")
     @Test
-    public void 카테고리별_제품_최저가() {
+    public void 카테고리별_상품_최저가조회() {
         //given
         SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
         List<ProductLowestPriceByCategoryRawDto> productLowestPriceByCategoryRawDtos = Arrays.asList(
@@ -56,5 +57,20 @@ class ProductSearchRepositoryTest {
             Assertions.assertThat(resultRawDtos.get(idx).getCategoryName()).isEqualTo(productLowestPriceByCategoryRawDtos.get(idx).getCategoryName());
             Assertions.assertThat(resultRawDtos.get(idx).getLowestPrice()).isEqualTo(productLowestPriceByCategoryRawDtos.get(idx).getLowestPrice());
         }
+    }
+
+    @DisplayName("각 카테고리의 상품들을 카테고리와 카테고리별 최저가를 통해 조회한다.")
+    @Test
+    public void 카테고리_최저가로_상품조회() {
+        //given
+        SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
+        long categoryNum = 4L;
+        int lowestPrice = 9000;
+
+        //when
+        List<ProductBrandNumAndNameRawDto> lowestPriceAndBrandByCategories = productSearchRepository.findLowestPriceAndBrandByCategory(lowestPrice, categoryNum);
+
+        //then
+        Assertions.assertThat(lowestPriceAndBrandByCategories).hasSize(2);
     }
 }

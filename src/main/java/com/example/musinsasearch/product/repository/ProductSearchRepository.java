@@ -1,6 +1,5 @@
 package com.example.musinsasearch.product.repository;
 
-import com.example.musinsasearch.category.domain.QCategory;
 import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
@@ -14,22 +13,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.example.musinsasearch.brand.domain.QBrand.brand;
-import static com.example.musinsasearch.category.domain.QCategory.*;
+import static com.example.musinsasearch.category.domain.QCategory.category;
 import static com.example.musinsasearch.product.domain.QProduct.product;
 
 @Repository
 @RequiredArgsConstructor
 public class ProductSearchRepository {
     private final JPAQueryFactory jpaQueryFactory;
-
-    public List<Integer> searchProductLowestPricesByCategory() {
-        List<Integer> products = jpaQueryFactory.select(product.price.min())
-                .from(product)
-                .groupBy(product.category)
-                .fetch();
-
-        return products;
-    }
 
     public List<ProductLowestPriceByCategoryRawDto> findLowestPriceByAllCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = jpaQueryFactory.select(
@@ -55,8 +45,6 @@ public class ProductSearchRepository {
         return productRawDtos;
     }
 
-//////api 1 끝////////
-
     public List<Integer> findLowestPriceByCategoryAndBrand(Long categoryNum, Long brandNum) {
         List<Integer> results = jpaQueryFactory.select(product.price.min())
                 .from(product)
@@ -79,6 +67,4 @@ public class ProductSearchRepository {
 
         return results;
     }
-
-
 }
