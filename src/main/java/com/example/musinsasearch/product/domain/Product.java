@@ -44,6 +44,11 @@ public class Product extends BasicEntity {
         return new Product(name, price, brand, category);
     }
 
+    public void updateProduct(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "Product{" +

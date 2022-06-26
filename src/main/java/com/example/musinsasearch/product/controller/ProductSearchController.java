@@ -1,6 +1,6 @@
 package com.example.musinsasearch.product.controller;
 
-import com.example.musinsasearch.category.exception.NotExistCategoryException;
+import com.example.musinsasearch.category.exception.NotFoundCategoryException;
 import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.exception.WrongParameterException;
 import com.example.musinsasearch.common.response.RestResponse;
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
 
 @Slf4j
 @RestController
@@ -45,8 +43,8 @@ public class ProductSearchController {
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NotExistCategoryException.class)
-    public RestResponse<Void> notExistCategoryException(NotExistCategoryException e) {
+    @ExceptionHandler(NotFoundCategoryException.class)
+    public RestResponse<Void> notExistCategoryException(NotFoundCategoryException e) {
         log.error(e.getClass() + ": " + e.getMessage());
         e.printStackTrace();
         return RestResponse.error(HttpStatus.BAD_REQUEST, e.getMessage());

@@ -2,9 +2,9 @@ package com.example.musinsasearch.product.service;
 
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
-import com.example.musinsasearch.category.exception.NotExistCategoryException;
+import com.example.musinsasearch.category.exception.NotFoundCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
-import com.example.musinsasearch.common.SearchDataHelper;
+import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.exception.WrongParameterException;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
@@ -102,7 +102,7 @@ class ProductSearchServiceTest {
         String notExistCategoryName = "없는 카테고리 이름";
 
         //when & then
-        Assertions.assertThatThrownBy(() -> productSearchService.searchLowestAndHighestProductByCategory(notExistCategoryName)).isInstanceOf(NotExistCategoryException.class);
+        Assertions.assertThatThrownBy(() -> productSearchService.searchLowestAndHighestProductByCategory(notExistCategoryName)).isInstanceOf(NotFoundCategoryException.class);
     }
 
     @DisplayName("[예외] 카테고리에서 최대가와 브랜드, 최소가와 브랜드 조회시 파라미터가 부적절하다")

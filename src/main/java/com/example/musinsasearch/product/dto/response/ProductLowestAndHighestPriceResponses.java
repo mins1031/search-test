@@ -1,6 +1,5 @@
 package com.example.musinsasearch.product.dto.response;
 
-import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
