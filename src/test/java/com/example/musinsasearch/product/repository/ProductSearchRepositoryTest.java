@@ -1,7 +1,6 @@
 package com.example.musinsasearch.product.repository;
 
 import com.example.musinsasearch.brand.repository.BrandRepository;
-import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.SearchDataHelper;
 import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,7 +47,7 @@ class ProductSearchRepositoryTest {
         );
 
         //when
-        List<ProductLowestPriceByCategoryRawDto> resultRawDtos = productSearchRepository.searchProductLowestPricesByCategory2();
+        List<ProductLowestPriceByCategoryRawDto> resultRawDtos = productSearchRepository.findLowestPriceByAllCategory();
 
         //then
         Assertions.assertThat(resultRawDtos).hasSize(productLowestPriceByCategoryRawDtos.size());

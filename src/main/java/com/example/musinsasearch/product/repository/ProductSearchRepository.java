@@ -31,7 +31,7 @@ public class ProductSearchRepository {
         return products;
     }
 
-    public List<ProductLowestPriceByCategoryRawDto> searchProductLowestPricesByCategory2() {
+    public List<ProductLowestPriceByCategoryRawDto> findLowestPriceByAllCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = jpaQueryFactory.select(
                         new QProductLowestPriceByCategoryRawDto(category.num, category.name, product.price.min())
                 )
@@ -43,7 +43,7 @@ public class ProductSearchRepository {
         return productRawDtos;
     }
 
-    public List<ProductBrandNumAndNameRawDto> searchProductLowestPricesByCategory3(int lowestPrice, Long categoryNum) {
+    public List<ProductBrandNumAndNameRawDto> findLowestPriceAndBrandByCategory(int lowestPrice, Long categoryNum) {
         List<ProductBrandNumAndNameRawDto> productRawDtos = jpaQueryFactory.select(
                         new QProductBrandNumAndNameRawDto(product.num, brand.num, brand.name)
                 )

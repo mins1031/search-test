@@ -6,9 +6,7 @@ import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.exception.NotExistCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.exception.ImpossibleException;
-import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.validator.RequestAndResultValidator;
-import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
 import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
@@ -17,7 +15,6 @@ import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPri
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
-import com.example.musinsasearch.product.repository.ProductRepository;
 import com.example.musinsasearch.product.repository.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,31 +23,34 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductSearchService {
     private final ProductSearchRepository productSearchRepository;
-    private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
-        //다 때려박고 정렬을 브랜드 순으로 할것.
-        List<ProductCategorizeLowestPriceResponse> responses = new ArrayList<>();
+        List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.findLowestPriceByAllCategory();
+        List<ProductCategorizeLowestPriceResponse> productCategorizeLowestPriceResponses = combineProductRawDtos(productRawDtos);
 
-        List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.searchProductLowestPricesByCategory2();
+        return new ProductCategorizeLowestPriceResponses(productCategorizeLowestPriceResponses);
+    }
+
+    private List<ProductCategorizeLowestPriceResponse> combineProductRawDtos(List<ProductLowestPriceByCategoryRawDto> productRawDtos) {
+        List<ProductCategorizeLowestPriceResponse> productResponses = new ArrayList<>();
+
         for (ProductLowestPriceByCategoryRawDto productRawDto : productRawDtos) {
-            List<ProductBrandNumAndNameRawDto> productBrandNumAndNameRawDtos = productSearchRepository.searchProductLowestPricesByCategory3(productRawDto.getLowestPrice(), productRawDto.getCategoryNum());
-            responses.addAll(productBrandNumAndNameRawDtos.stream()
+            List<ProductBrandNumAndNameRawDto> productBrandNumAndNameRawDtos = productSearchRepository.findLowestPriceAndBrandByCategory(productRawDto.getLowestPrice(), productRawDto.getCategoryNum());
+            productResponses.addAll(productBrandNumAndNameRawDtos.stream()
                     .map(rawDto -> ProductCategorizeLowestPriceResponse.of(productRawDto, rawDto))
                     .collect(Collectors.toList()));
         }
 
-        return new ProductCategorizeLowestPriceResponses(responses);
+        return productResponses;
     }
 
     @Transactional(readOnly = true)
