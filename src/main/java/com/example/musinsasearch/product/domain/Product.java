@@ -9,11 +9,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(name = "idx_brand_category", columnList = "brand_num, category_num"),
+        @Index(name = "idx_category", columnList = "category_num"),
+        @Index(name = "idx_price", columnList = "price")
+})
 public class Product extends BasicEntity {
 
     private String name;
@@ -35,5 +42,18 @@ public class Product extends BasicEntity {
 
     public static Product createProduct(String name, int price, Brand brand, Category category) {
         return new Product(name, price, brand, category);
+    }
+
+    public void updateProduct(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

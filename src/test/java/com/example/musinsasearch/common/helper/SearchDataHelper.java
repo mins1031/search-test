@@ -1,4 +1,4 @@
-package com.example.musinsasearch.datainsert;
+package com.example.musinsasearch.common.helper;
 
 import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
@@ -6,27 +6,13 @@ import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
-@SpringBootTest
-public class DataInserter {
+public class SearchDataHelper {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
-
-//    @Test
-    public void 데이터_입력() {
+    public static void 검색_데이터_저장(CategoryRepository categoryRepository, BrandRepository brandRepository, ProductRepository productRepository) {
         //카테고리
         Category 상의 = categoryRepository.save(Category.createCategory("상의"));
         Category 아우터 = categoryRepository.save(Category.createCategory("아우터"));
@@ -139,42 +125,5 @@ public class DataInserter {
         productRepository.save(Product.createProduct("모자9", 1700, i, 모자));
         productRepository.save(Product.createProduct("양말9", 1700, i, 양말));
         productRepository.save(Product.createProduct("액세서리9", 2400, i, 액세서리));
-    }
-
-//    @Test
-    public void 데이터_입력_대용량() {
-        //카테고리
-        Category 상의 = categoryRepository.save(Category.createCategory("상의"));
-        Category 아우터 = categoryRepository.save(Category.createCategory("아우터"));
-        Category 바지 = categoryRepository.save(Category.createCategory("바지"));
-        Category 스니커즈 = categoryRepository.save(Category.createCategory("스니커즈"));
-        Category 가방 = categoryRepository.save(Category.createCategory("가방"));
-        Category 모자 = categoryRepository.save(Category.createCategory("모자"));
-        Category 양말 = categoryRepository.save(Category.createCategory("양말"));
-        Category 액세서리량= categoryRepository.save(Category.createCategory("액세서리"));
-
-        //브랜드
-        Brand a = brandRepository.save(Brand.createBrand("A"));
-        Brand b = brandRepository.save(Brand.createBrand("B"));
-        Brand c = brandRepository.save(Brand.createBrand("C"));
-        Brand d = brandRepository.save(Brand.createBrand("D"));
-        Brand e = brandRepository.save(Brand.createBrand("E"));
-        Brand f = brandRepository.save(Brand.createBrand("F"));
-        Brand g = brandRepository.save(Brand.createBrand("G"));
-        Brand h = brandRepository.save(Brand.createBrand("H"));
-        Brand i = brandRepository.save(Brand.createBrand("I"));
-
-        //상품
-        List<Category> categories = categoryRepository.findAll();
-        List<Brand> brands = brandRepository.findAll();
-
-        for (Brand brand : brands) {
-            for (Category category : categories) {
-                for (int index = 0; index < 15000; index++) {
-                    int randomPrice = (int) ((Math.random() * (50000 - 10000)) + 10000);
-                    productRepository.save(Product.createProduct(UUID.randomUUID().toString().substring(0, 8), randomPrice, brand, category));
-                }
-            }
-        }
     }
 }

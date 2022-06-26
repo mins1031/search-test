@@ -1,0 +1,14 @@
+GET http://localhost:8080/products/brands-low-price
+Content-Type: application/json
+
+#res
+#{
+#  "statusCode": "OK",
+#  "message": null,
+#  "result": {
+#    "lowestBrandName": "I",
+#    "lowestAllProductSumPrice": 80006
+#  }
+#}
+#
+#Response code: 200; Time: 2061ms; Content length: 100 bytes

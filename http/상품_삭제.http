@@ -1,0 +1,6 @@
+DELETE http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "productNum": 1080289
+}
