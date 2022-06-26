@@ -1,2 +1,51 @@
 GET http://localhost:8080/products/low-high-price/상의
 Content-Type: application/json
+
+#res
+#{
+#  "statusCode": "OK",
+#  "message": null,
+#  "result": {
+#    "lowestResponses": [
+#      {
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "productPrice": 10000
+#      },
+#      {
+#        "brandNum": 4,
+#        "brandName": "D",
+#        "productPrice": 10000
+#      },
+#      {
+#        "brandNum": 6,
+#        "brandName": "F",
+#        "productPrice": 10000
+#      },
+#      {
+#        "brandNum": 8,
+#        "brandName": "H",
+#        "productPrice": 10000
+#      },
+#      {
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "productPrice": 10000
+#      }
+#    ],
+#    "highestResponses": [
+#      {
+#        "brandNum": 1,
+#        "brandName": "A",
+#        "productPrice": 49999
+#      },
+#      {
+#        "brandNum": 9,
+#        "brandName": "I",
+#        "productPrice": 49999
+#      }
+#    ]
+#  }
+#}
+#
+#Response code: 200; Time: 676ms; Content length: 450 bytes

@@ -10,7 +10,9 @@ import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.validator.RequestAndResultValidator;
 import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.ProductPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
+import com.example.musinsasearch.product.dto.raw.ProductLowestPriceByCategoryRawDto;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponse;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
@@ -37,43 +39,19 @@ public class ProductSearchService {
 
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
-        List<Category> allCategories = categoryRepository.findAll();
-        //find category num 만 가져올수는 없나? 되면 얼마나 걸리나..?
-        List<Product> productsByLowestPrice = new ArrayList<>();
+        //다 때려박고 정렬을 브랜드 순으로 할것.
+        List<ProductCategorizeLowestPriceResponse> responses = new ArrayList<>();
 
-        for (Category category : allCategories) {
-            List<Product> productsByCategory = productRepository.findByCategoryNum(category.getNum());
-            productsByLowestPrice.add(productsByCategory.stream().min(Comparator.comparing(Product::getPrice)).orElse(null));
+        List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.searchProductLowestPricesByCategory2();
+        for (ProductLowestPriceByCategoryRawDto productRawDto : productRawDtos) {
+            List<ProductBrandNumAndNameRawDto> productBrandNumAndNameRawDtos = productSearchRepository.searchProductLowestPricesByCategory3(productRawDto.getLowestPrice(), productRawDto.getCategoryNum());
+            responses.addAll(productBrandNumAndNameRawDtos.stream()
+                    .map(rawDto -> ProductCategorizeLowestPriceResponse.of(productRawDto, rawDto))
+                    .collect(Collectors.toList()));
         }
 
-//        List<Product> allProducts = productRepository.findAll();
-//        List<ProductCategorizeLowestPriceResponse> productCategorizeLowestPriceResponses = productSearchRepository.searchProductLowestPricesByCategory();
-////        Map<String, List<ProductCategorizeLowestPriceResponse>> categoryListMap = productCategorizeLowestPriceResponses.stream().collect(Collectors.groupingBy(ProductCategorizeLowestPriceResponse::getCategoryName));
-//        List<ProductCategorizeLowestPriceResponse> productsGroupByCategory = categoryListMap.values().stream()
-//                .map(values -> values.stream().min(Comparator.comparing(ProductCategorizeLowestPriceResponse::getPrice)).orElse(null))
-//                .sorted(Comparator.comparing(product -> product.getCategoryName()))
-//                .collect(Collectors.toList());
-
-        return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsByLowestPrice));
+        return new ProductCategorizeLowestPriceResponses(responses);
     }
-
-//    @Transactional(readOnly = true)
-//    public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory2() {
-//        long startTime = System.currentTimeMillis();
-//
-//        List<Product> allProducts = productRepository.findAll();
-//        Map<Category, List<Product>> categoryListMap = allProducts.stream().collect(Collectors.groupingBy(Product::getCategory));
-//
-//        List<Product> productsGroupByCategory = categoryListMap.values().stream()
-//                .map(values -> values.stream().min(Comparator.comparing(Product::getPrice)).orElse(null))
-//                .sorted(Comparator.comparing(product -> product.getCategory().getNum()))
-//                .collect(Collectors.toList());
-//
-//        long endTime = System.currentTimeMillis();
-//        System.out.println("걸린 시간: " + (endTime - startTime));
-//
-//        return new ProductCategorizeLowestPriceResponses(ProductCategorizeLowestPriceResponse.listOf(productsGroupByCategory));
-//    }
 
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
