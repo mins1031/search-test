@@ -33,13 +33,13 @@ public class ProductCommandService {
     }
 
     @Transactional
-    public void updateProductPrice(ProductUpdateRequest productCreateRequest) {
+    public void updateProduct(ProductUpdateRequest productCreateRequest) {
         Product product = productRepository.findById(productCreateRequest.getProductNum()).orElseThrow(NotFoundProductException::new);
         product.updateProduct(productCreateRequest.getProductName(), productCreateRequest.getProductPrice());
     }
 
     @Transactional
-    public void deleteProductPrice(ProductDeleteRequest productDeleteRequest) {
+    public void deleteProduct(ProductDeleteRequest productDeleteRequest) {
         Product product = productRepository.findById(productDeleteRequest.getProductNum()).orElseThrow(NotFoundProductException::new);
         productRepository.delete(product);
     }

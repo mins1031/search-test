@@ -74,7 +74,7 @@ class ProductCommandServiceTest {
         ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(product.getNum(), updateName, updatePrice);
 
         //when
-        productCommandService.updateProductPrice(productUpdateRequest);
+        productCommandService.updateProduct(productUpdateRequest);
 
         //then
         Product updatedProduct = productRepository.findById(product.getNum()).get();
@@ -95,7 +95,7 @@ class ProductCommandServiceTest {
         ProductDeleteRequest productDeleteRequest = new ProductDeleteRequest(product.getNum());
 
         //when
-        productCommandService.deleteProductPrice(productDeleteRequest);
+        productCommandService.deleteProduct(productDeleteRequest);
 
         //then
         Optional<Product> deletedProduct = productRepository.findById(product.getNum());
