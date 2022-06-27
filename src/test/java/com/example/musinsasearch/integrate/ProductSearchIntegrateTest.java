@@ -1,22 +1,13 @@
 package com.example.musinsasearch.integrate;
 
-import com.example.musinsasearch.brand.repository.BrandRepository;
-import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.basetest.IntegrateBaseTest;
 import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.product.controller.ProductSearchControllerPath;
-import com.example.musinsasearch.product.repository.ProductRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
