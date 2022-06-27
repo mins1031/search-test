@@ -27,25 +27,19 @@ public class ProductCommandController {
     private final ProductCommandService productCommandService;
 
     @PostMapping(ProductCommandControllerPath.PRODUCT_SAVE)
-    public RestResponse<Void> createProduct(
-            @Validated @RequestBody ProductCreateRequest productCreateRequest
-    ) {
+    public RestResponse<Void> createProduct(@Validated @RequestBody ProductCreateRequest productCreateRequest) {
         productCommandService.createProduct(productCreateRequest);
         return RestResponse.of(HttpStatus.OK, null);
     }
 
     @PutMapping(ProductCommandControllerPath.PRODUCT_UPDATE)
-    public RestResponse<Void> updateProduct(
-            @Validated @RequestBody ProductUpdateRequest productUpdateRequest
-    ) {
+    public RestResponse<Void> updateProduct(@Validated @RequestBody ProductUpdateRequest productUpdateRequest) {
         productCommandService.updateProduct(productUpdateRequest);
         return RestResponse.of(HttpStatus.OK, null);
     }
 
     @DeleteMapping(ProductCommandControllerPath.PRODUCT_DELETE)
-    public RestResponse<Void> deleteProduct(
-            @Validated @RequestBody ProductDeleteRequest productDeleteRequest
-    ) {
+    public RestResponse<Void> deleteProduct(@Validated @RequestBody ProductDeleteRequest productDeleteRequest) {
         productCommandService.deleteProduct(productDeleteRequest);
         return RestResponse.of(HttpStatus.OK, null);
     }

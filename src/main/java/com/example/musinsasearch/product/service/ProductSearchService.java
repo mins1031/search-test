@@ -37,8 +37,9 @@ public class ProductSearchService {
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = productSearchRepository.findLowestPriceByAllCategory();
         List<ProductCategorizeLowestPriceResponse> productCategorizeLowestPriceResponses = combineProductRawDtos(productRawDtos);
+        int totalLowestPriceByCategory = productRawDtos.stream().mapToInt(ProductLowestPriceByCategoryRawDto::getLowestPrice).sum();
 
-        return new ProductCategorizeLowestPriceResponses(productCategorizeLowestPriceResponses);
+        return new ProductCategorizeLowestPriceResponses(productCategorizeLowestPriceResponses, totalLowestPriceByCategory);
     }
 
     //카테고리와 최저가 정보를 통해 각 카테고리의 최저가 상품 리스트 생성.
@@ -58,10 +59,10 @@ public class ProductSearchService {
     //한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
-        List<Brand> brands = brandRepository.findAll();
-        List<Category> categories = categoryRepository.findAll();
+        List<Brand> allBrands = brandRepository.findAll();
+        List<Category> allCategories = categoryRepository.findAll();
 
-        ProductLowestPriceAndBrandResponse productLowestPriceAndBrandResponse = filterLowestPriceFromCategoryAndBrand(brands, categories);
+        ProductLowestPriceAndBrandResponse productLowestPriceAndBrandResponse = filterLowestPriceFromCategoryAndBrand(allBrands, allCategories);
 
         return productLowestPriceAndBrandResponse;
     }
@@ -100,7 +101,6 @@ public class ProductSearchService {
     public ProductLowestAndHighestPriceResponses searchLowestAndHighestProductByCategory(String categoryName) {
         RequestAndResultValidator.verifyStringParameter(categoryName);
         Category category = categoryRepository.findByName(categoryName).orElseThrow(NotFoundCategoryException::new);
-        //카테고리에 맞는 브랜드별 최저,최고가 및 브랜드 정보 조회
         List<ProductLowestAndHighestPriceRawDto> rawDtos = productSearchRepository.searchLowestPriceAndHighest(category.getNum());
         RequestAndResultValidator.verifyEmptyCollection(rawDtos);
 
@@ -127,6 +127,7 @@ public class ProductSearchService {
         List<ProductPriceAndBrandResponse> lowestResponses = rawDtos.stream()
                 .filter(rawDto -> rawDto.getLowestPrice() == lowestPrice)
                 .map(rawDto -> ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), rawDto.getLowestPrice()))
+                .sorted(Comparator.comparing(ProductPriceAndBrandResponse::getBrandNum))
                 .collect(Collectors.toList());
 
         return lowestResponses;
@@ -137,6 +138,7 @@ public class ProductSearchService {
         List<ProductPriceAndBrandResponse> highestResponses = rawDtos.stream()
                 .filter(rawDto -> rawDto.getHighestPrice() == highestPrice)
                 .map(rawDto -> ProductPriceAndBrandResponse.of(rawDto.getBrandNum(), rawDto.getBrandName(), rawDto.getHighestPrice()))
+                .sorted(Comparator.comparing(ProductPriceAndBrandResponse::getBrandName))
                 .collect(Collectors.toList());
 
         return highestResponses;
