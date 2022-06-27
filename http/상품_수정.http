@@ -1,4 +1,4 @@
-PUT http://localhost:8080/products
+PATCH http://localhost:8080/products
 Content-Type: application/json
 
 {

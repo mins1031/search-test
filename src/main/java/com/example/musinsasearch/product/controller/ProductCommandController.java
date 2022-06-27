@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +32,7 @@ public class ProductCommandController {
         return RestResponse.of(HttpStatus.OK, null);
     }
 
-    @PutMapping(ProductCommandControllerPath.PRODUCT_UPDATE)
+    @PatchMapping(ProductCommandControllerPath.PRODUCT_UPDATE)
     public RestResponse<Void> updateProduct(@Validated @RequestBody ProductUpdateRequest productUpdateRequest) {
         productCommandService.updateProduct(productUpdateRequest);
         return RestResponse.of(HttpStatus.OK, null);

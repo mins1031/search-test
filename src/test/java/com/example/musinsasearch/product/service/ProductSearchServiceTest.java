@@ -50,11 +50,38 @@ class ProductSearchServiceTest {
 
         //then
         Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses()).hasSize(resultCount);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(0).getCategoryName()).isEqualTo("상의");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(0).getBrandName()).isEqualTo("C");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(0).getPrice()).isEqualTo(10000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(1).getCategoryName()).isEqualTo("아우터");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(1).getBrandName()).isEqualTo("E");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(1).getPrice()).isEqualTo(5000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(2).getCategoryName()).isEqualTo("바지");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(2).getBrandName()).isEqualTo("D");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(2).getPrice()).isEqualTo(3000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(3).getCategoryName()).isEqualTo("스니커즈");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(3).getBrandName()).isEqualTo("A");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(3).getPrice()).isEqualTo(9000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(4).getCategoryName()).isEqualTo("스니커즈");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(4).getBrandName()).isEqualTo("G");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(4).getPrice()).isEqualTo(9000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(5).getCategoryName()).isEqualTo("가방");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(5).getBrandName()).isEqualTo("A");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(5).getPrice()).isEqualTo(2000);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(6).getCategoryName()).isEqualTo("모자");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(6).getBrandName()).isEqualTo("D");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(6).getPrice()).isEqualTo(1500);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(7).getCategoryName()).isEqualTo("양말");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(7).getBrandName()).isEqualTo("I");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(7).getPrice()).isEqualTo(1700);
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(8).getCategoryName()).isEqualTo("액세서리");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(8).getBrandName()).isEqualTo("F");
+        Assertions.assertThat(responses.getProductCategorizeLowestPriceResponses().get(8).getPrice()).isEqualTo(1900);
     }
 
     @DisplayName("한 브랜드에서 카테고리 상품중 최저가 상품의 합이 최소인 브랜드와 가격 조회")
     @Test
-    public void 브랜드_카테고리별_상품최저가합_최저가_검색() {
+    public void 브랜드_카테고리별_상품최저가합_최저가_조회() {
         //given
         SearchDataHelper.검색_데이터_저장(categoryRepository, brandRepository, productRepository);
         int expectPrice = 36100;
