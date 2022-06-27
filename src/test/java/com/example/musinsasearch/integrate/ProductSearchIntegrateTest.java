@@ -2,6 +2,7 @@ package com.example.musinsasearch.integrate;
 
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.repository.CategoryRepository;
+import com.example.musinsasearch.common.basetest.IntegrateBaseTest;
 import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.product.controller.ProductSearchControllerPath;
 import com.example.musinsasearch.product.repository.ProductRepository;
@@ -25,28 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("h2")
-public class ProductSearchIntegrateTest {
-
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    protected MockMvc mockMvc;
-
-    protected ObjectMapper objectMapper = new ObjectMapper();
-
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
+public class ProductSearchIntegrateTest extends IntegrateBaseTest {
 
     @DisplayName("카테고리별 브랜드 상관없이 최저가 상품 조회 통합테스트")
     @Test

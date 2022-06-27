@@ -1,9 +1,8 @@
 package com.example.musinsasearch.integrate;
 
 import com.example.musinsasearch.brand.domain.Brand;
-import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
-import com.example.musinsasearch.category.repository.CategoryRepository;
+import com.example.musinsasearch.common.basetest.IntegrateBaseTest;
 import com.example.musinsasearch.common.helper.BrandCreateHelper;
 import com.example.musinsasearch.common.helper.CategoryCreateHelper;
 import com.example.musinsasearch.common.helper.ProductCreateHelper;
@@ -12,19 +11,11 @@ import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.request.ProductCreateRequest;
 import com.example.musinsasearch.product.dto.request.ProductDeleteRequest;
 import com.example.musinsasearch.product.dto.request.ProductUpdateRequest;
-import com.example.musinsasearch.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -34,29 +25,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("h2")
-public class ProductCommandIntegrateTest {
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+public class ProductCommandIntegrateTest extends IntegrateBaseTest {
 
-    @Autowired
-    private BrandRepository brandRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    protected MockMvc mockMvc;
-
-    protected ObjectMapper objectMapper = new ObjectMapper();
-
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @DisplayName("상품 생성 통합테스트")
     @Test
