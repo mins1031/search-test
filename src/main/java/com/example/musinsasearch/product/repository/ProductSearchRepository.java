@@ -21,6 +21,7 @@ import static com.example.musinsasearch.product.domain.QProduct.product;
 public class ProductSearchRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
+    //카테고리 정보와
     public List<ProductLowestPriceByCategoryRawDto> findLowestPriceByAllCategory() {
         List<ProductLowestPriceByCategoryRawDto> productRawDtos = jpaQueryFactory.select(
                         new QProductLowestPriceByCategoryRawDto(category.num, category.name, product.price.min())
@@ -55,6 +56,7 @@ public class ProductSearchRepository {
         return result;
     }
 
+    //카테고리에 맞는 브랜드별 최저,최고가 및 브랜드 정보 조회
     public List<ProductLowestAndHighestPriceRawDto> searchLowestPriceAndHighest(Long categoryNum) {
         List<ProductLowestAndHighestPriceRawDto> results = jpaQueryFactory.select(
                         new QProductLowestAndHighestPriceRawDto(product.brand.num, product.brand.name, product.price.min(), product.price.max())

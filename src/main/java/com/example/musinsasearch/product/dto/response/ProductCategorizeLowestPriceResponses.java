@@ -10,8 +10,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductCategorizeLowestPriceResponses {
     private List<ProductCategorizeLowestPriceResponse> ProductCategorizeLowestPriceResponses;
+    private int totalLowestPriceByCategory;
 
-    public ProductCategorizeLowestPriceResponses(List<ProductCategorizeLowestPriceResponse> productCategorizeLowestPriceResponses) {
-        ProductCategorizeLowestPriceResponses = productCategorizeLowestPriceResponses;
+    public ProductCategorizeLowestPriceResponses(List<ProductCategorizeLowestPriceResponse> productCategorizeLowestPriceResponses, int totalLowestPriceByCategory) {
+        this.ProductCategorizeLowestPriceResponses = productCategorizeLowestPriceResponses;
+        this.totalLowestPriceByCategory = totalLowestPriceByCategory;
     }
 }
