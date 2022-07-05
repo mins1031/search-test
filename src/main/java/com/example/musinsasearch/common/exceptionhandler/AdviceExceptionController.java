@@ -23,7 +23,7 @@ public class AdviceExceptionController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({ImpossibleException.class})
-    public RestResponse<Void> impossibleException(Exception e) {
+    public RestResponse<Void> impossibleException(ImpossibleException e) {
         log.error(e.getClass() + ": " + e.getMessage());
         e.printStackTrace();
         return RestResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

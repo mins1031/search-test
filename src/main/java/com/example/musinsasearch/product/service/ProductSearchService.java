@@ -59,6 +59,7 @@ public class ProductSearchService {
 
     //한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
     //흐름! 1) 각 브랜드의 카테고리별 상품의 최저가 조회 -> 2) 브랜드의 카테고리별 최저가들의 합 계산 -> 3) 각 브랜드 정보와 최저가 합중 최저가 추출 -> 4) 응답
+    //개인적으로 방식자체가 마음에 안든다. 개선 필요! 개선방식 생각해볼것.
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
         List<Brand> allBrands = brandRepository.findAll();
