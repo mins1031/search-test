@@ -15,6 +15,7 @@ import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPri
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.repository.ProductRepository;
 import com.example.musinsasearch.product.repository.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductSearchService {
     private final ProductSearchRepository productSearchRepository;
+    private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
@@ -57,9 +59,11 @@ public class ProductSearchService {
         return productResponses;
     }
 
-    //한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
-    //흐름! 1) 각 브랜드의 카테고리별 상품의 최저가 조회 -> 2) 브랜드의 카테고리별 최저가들의 합 계산 -> 3) 각 브랜드 정보와 최저가 합중 최저가 추출 -> 4) 응답
-    //개인적으로 방식자체가 마음에 안든다. 개선 필요! 개선방식 생각해볼것.
+    // 한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
+    // 흐름! 1) 각 브랜드의 카테고리별 상품의 최저가 조회 -> 2) 브랜드의 카테고리별 최저가들의 합 계산 -> 3) 각 브랜드 정보와 최저가 합중 최저가 추출 -> 4) 응답
+    // 개인적으로 방식자체가 마음에 안든다. 개선 필요! 개선방식 생각해볼것.
+    // 다른방법이 뭐가 있을까?
+    // 1.
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
         List<Brand> allBrands = brandRepository.findAll();
@@ -75,8 +79,9 @@ public class ProductSearchService {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
         for (Brand brand : brands) {
-            List<Integer> lowestPricesByBrand = searchEachCategoryLowestPrices(categories, brand); // 1)
-            Integer sumPriceByBrand = lowestPricesByBrand.stream().reduce(Integer::sum).get(); // 2)
+//            List<Integer> lowestPricesByBrand = searchEachCategoryLowestPrices(categories, brand); // 1)
+//            Integer sumPriceByBrand = lowestPricesByBrand.stream().reduce(Integer::sum).get(); // 2)
+            Integer sumPriceByBrand = productRepository.sumLowestPriceEachCategoryByBrand(brand.getNum());
             ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), sumPriceByBrand);
             responses.add(totalLowestPrice);
         }

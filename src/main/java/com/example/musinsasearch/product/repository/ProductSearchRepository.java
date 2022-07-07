@@ -49,9 +49,8 @@ public class ProductSearchRepository {
     public Integer findLowestPriceByCategoryAndBrand(Long categoryNum, Long brandNum) {
         Integer result = jpaQueryFactory.select(product.price.min())
                 .from(product)
-                .distinct()
                 .where(product.category.num.eq(categoryNum).and(product.brand.num.eq(brandNum)))
-                .fetchOne();
+                .fetchFirst();
 
         return result;
     }
