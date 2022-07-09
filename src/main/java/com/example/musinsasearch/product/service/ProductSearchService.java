@@ -63,7 +63,10 @@ public class ProductSearchService {
     // 흐름! 1) 각 브랜드의 카테고리별 상품의 최저가 조회 -> 2) 브랜드의 카테고리별 최저가들의 합 계산 -> 3) 각 브랜드 정보와 최저가 합중 최저가 추출 -> 4) 응답
     // 개인적으로 방식자체가 마음에 안든다. 개선 필요! 개선방식 생각해볼것.
     // 다른방법이 뭐가 있을까?
-    // 1.
+    // 1. 서브쿼리를 사용해서 쿼리 횟수를 줄이고 속도를 향상 2.5초 -> 1.8초
+    // 서브쿼리는 안티패턴이라고 생각함(가독성 측면). 다만 적절한 상황이면 사용하는게 맞다고 생각한다.(적절한 상황이면 가독성 버리고 성능을 챙김)
+    // 서브쿼리사용으로 네이티브 쿼리를 사용하게 되었음 -> jpql은 from절의 서브쿼리를 지원하지 않기에 mybatis를 사용하거나 네이티브 쿼리를 사용해야 했음
+    // 네이티브 쿼리의 단점을 감안하고서도 사용할만 했는지도 판단할것.
     @Transactional(readOnly = true)
     public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
         List<Brand> allBrands = brandRepository.findAll();
