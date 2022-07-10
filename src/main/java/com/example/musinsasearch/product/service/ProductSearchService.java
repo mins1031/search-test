@@ -7,6 +7,7 @@ import com.example.musinsasearch.category.exception.NotFoundCategoryException;
 import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.exception.ImpossibleException;
 import com.example.musinsasearch.common.validator.RequestAndResultValidator;
+import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponses;
 import com.example.musinsasearch.product.dto.response.ProductPriceAndBrandResponse;
 import com.example.musinsasearch.product.dto.raw.ProductBrandNumAndNameRawDto;
 import com.example.musinsasearch.product.dto.raw.ProductLowestAndHighestPriceRawDto;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,24 +63,18 @@ public class ProductSearchService {
 
     // 한 브랜드에 모든 카테고리의 상품 한꺼번에 구매할 경우 최저가 및 브랜드 조회 API
     // 흐름! 1) 각 브랜드의 카테고리별 상품의 최저가 조회 -> 2) 브랜드의 카테고리별 최저가들의 합 계산 -> 3) 각 브랜드 정보와 최저가 합중 최저가 추출 -> 4) 응답
-    // 개인적으로 방식자체가 마음에 안든다. 개선 필요! 개선방식 생각해볼것.
-    // 다른방법이 뭐가 있을까?
-    // 1. 서브쿼리를 사용해서 쿼리 횟수를 줄이고 속도를 향상 2.5초 -> 1.8초
-    // 서브쿼리는 안티패턴이라고 생각함(가독성 측면). 다만 적절한 상황이면 사용하는게 맞다고 생각한다.(적절한 상황이면 가독성 버리고 성능을 챙김)
-    // 서브쿼리사용으로 네이티브 쿼리를 사용하게 되었음 -> jpql은 from절의 서브쿼리를 지원하지 않기에 mybatis를 사용하거나 네이티브 쿼리를 사용해야 했음
-    // 네이티브 쿼리의 단점을 감안하고서도 사용할만 했는지도 판단할것.
     @Transactional(readOnly = true)
-    public ProductLowestPriceAndBrandResponse searchLowestPriceInAllBrand() {
+    public ProductLowestPriceAndBrandResponses searchLowestPriceInAllBrand() {
         List<Brand> allBrands = brandRepository.findAll();
-        List<Category> allCategories = categoryRepository.findAll();
 
-        ProductLowestPriceAndBrandResponse productLowestPriceAndBrandResponse = filterLowestPriceFromCategoryAndBrand(allBrands, allCategories);
+        List<ProductLowestPriceAndBrandResponse> productLowestPriceAndBrandResponses = filterLowestPriceFromCategoryAndBrand(allBrands);
 
-        return productLowestPriceAndBrandResponse;
+        return new ProductLowestPriceAndBrandResponses(productLowestPriceAndBrandResponses);
     }
 
-    //브랜드별 각 카테고리의 최저가를 조회, 더한후 최저가 추출.
-    private ProductLowestPriceAndBrandResponse filterLowestPriceFromCategoryAndBrand(List<Brand> brands, List<Category> categories) {
+    //브랜드별 각 카테고리의 최저가를 조회, 더한후 최저가 추출.료
+    //기존 코드와 개선 코드의 비교를 위해 기존 코드를 주석처리후 그대로 두었습니다.
+    private List<ProductLowestPriceAndBrandResponse> filterLowestPriceFromCategoryAndBrand(List<Brand> brands) {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
         for (Brand brand : brands) {
@@ -89,23 +85,33 @@ public class ProductSearchService {
             responses.add(totalLowestPrice);
         }
 
-        return responses.stream().min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice)).get(); // 3)
+        int lowestPrice = extractLowestPrice(responses);
+
+        return responses.stream()
+                .filter(productLowestPriceAndBrandResponse -> productLowestPriceAndBrandResponse.getLowestAllProductSumPrice() == lowestPrice)
+                .collect(Collectors.toList());// 3)
+    }
+
+    private int extractLowestPrice(List<ProductLowestPriceAndBrandResponse> responses) {
+        return responses.stream()
+                .min(Comparator.comparing(ProductLowestPriceAndBrandResponse::getLowestAllProductSumPrice))
+                .orElseThrow(NoSuchElementException::new).getLowestAllProductSumPrice();
     }
 
     //브랜드의 각 카테고리별 최저가 조회.
-    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
-        List<Integer> lowestPricesByBrand = new ArrayList<>();
-        for (Category category : categories) {
-            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
-            if (lowestPriceInBrandAndCategory == null) {
-                continue;
-            }
-
-            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
-        }
-
-        return lowestPricesByBrand;
-    }
+//    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
+//        List<Integer> lowestPricesByBrand = new ArrayList<>();
+//        for (Category category : categories) {
+//            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
+//            if (lowestPriceInBrandAndCategory == null) {
+//                continue;
+//            }
+//
+//            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
+//        }
+//
+//        return lowestPricesByBrand;
+//    }
 
     //각 카테고리 이름으로 최소, 최대 가격조회 API
     //흐름! 1) 카테고리 정보를 토대로 브랜드별 브랜드 정보, 상품의 최대, 최저가 조회 -> 2) 검색된 브랜드별 최고, 최저가중의 최고, 최저가 추출 -> 3) 최대가와 최저가와 동일한 정보를 추출 -> 4) 응답

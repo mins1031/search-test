@@ -6,9 +6,13 @@ Content-Type: application/json
 #  "statusCode": "OK",
 #  "message": null,
 #  "result": {
-#    "lowestBrandName": "I",
-#    "lowestAllProductSumPrice": 80006
+#    "productLowestPriceAndBrandResponses": [
+#      {
+#        "lowestBrandName": "I",
+#        "lowestAllProductSumPrice": 80006
+#      }
+#    ]
 #  }
 #}
 #
-#Response code: 200; Time: 2061ms; Content length: 100 bytes
+#Response code: 200; Time: 2009ms; Content length: 142 bytes

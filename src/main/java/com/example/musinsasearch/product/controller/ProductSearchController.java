@@ -7,6 +7,7 @@ import com.example.musinsasearch.common.response.RestResponse;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponses;
 import com.example.musinsasearch.product.service.ProductSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,9 +33,9 @@ public class ProductSearchController {
     }
 
     @GetMapping(ProductSearchControllerPath.ALL_CATEGORY_LOW_PRICES_BY_BRAND)
-    public RestResponse<ProductLowestPriceAndBrandResponse> searchLowestPriceAndOneBrandInAllBrand() {
-        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceInAllBrand();
-        return RestResponse.of(HttpStatus.OK, response);
+    public RestResponse<ProductLowestPriceAndBrandResponses> searchLowestPriceAndOneBrandInAllBrand() {
+        ProductLowestPriceAndBrandResponses responses = productSearchService.searchLowestPriceInAllBrand();
+        return RestResponse.of(HttpStatus.OK, responses);
     }
 
     @GetMapping(ProductSearchControllerPath.LOW_AND_HIGH_PRICE_BY_CATEGORY)
