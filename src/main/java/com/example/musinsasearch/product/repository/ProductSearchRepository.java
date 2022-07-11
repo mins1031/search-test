@@ -30,7 +30,6 @@ public class ProductSearchRepository {
                 .innerJoin(product.category, category)
                 .groupBy(product.category)
                 .fetch();
-
         return productRawDtos;
     }
 

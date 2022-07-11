@@ -36,7 +36,7 @@ public class ProductSearchService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
-    //모든 카테고의 상품을 브랜드별로 자유롭 선택해 모든 상품을 구매할때 최저 조회 API성
+    //모든 카테고의 상품을 브랜드별로 자유롭게 선택해 모든 상품을 구매할때 최저 조회 API
     //흐름! 1) 카테고리별 상품의 최저가와 카테고리정보 조회  ->  2) 카테고리정보와 최저가를 만족하는 상품들을 조회  ->  3) 응답
     @Transactional(readOnly = true)
     public ProductCategorizeLowestPriceResponses searchProductLowestPricesByCategory() {
@@ -72,15 +72,15 @@ public class ProductSearchService {
         return new ProductLowestPriceAndBrandResponses(productLowestPriceAndBrandResponses);
     }
 
-    //브랜드별 각 카테고리의 최저가를 조회, 더한후 최저가 추출.료
-    //기존 코드와 개선 코드의 비교를 위해 기존 코드를 주석처리후 그대로 두었습니다.
+    //브랜드별 각 카테고리의 최저가를 조회, 더한후 최저가 추출.
+    //TODO 기존 코드와 개선 코드의 비교를 위해 기존 코드를 주석처리후 그대로 두었습니다.
     private List<ProductLowestPriceAndBrandResponse> filterLowestPriceFromCategoryAndBrand(List<Brand> brands) {
         List<ProductLowestPriceAndBrandResponse> responses = new ArrayList<>();
 
         for (Brand brand : brands) {
 //            List<Integer> lowestPricesByBrand = searchEachCategoryLowestPrices(categories, brand); // 1)
 //            Integer sumPriceByBrand = lowestPricesByBrand.stream().reduce(Integer::sum).get(); // 2)
-            Integer sumPriceByBrand = productRepository.sumLowestPriceEachCategoryByBrand(brand.getNum());
+            Integer sumPriceByBrand = productRepository.sumLowestPriceEachCategoryByBrand(brand.getNum()); // 1), 2)
             ProductLowestPriceAndBrandResponse totalLowestPrice = new ProductLowestPriceAndBrandResponse(brand.getName(), sumPriceByBrand);
             responses.add(totalLowestPrice);
         }
@@ -99,19 +99,19 @@ public class ProductSearchService {
     }
 
     //브랜드의 각 카테고리별 최저가 조회.
-//    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
-//        List<Integer> lowestPricesByBrand = new ArrayList<>();
-//        for (Category category : categories) {
-//            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
-//            if (lowestPriceInBrandAndCategory == null) {
-//                continue;
-//            }
-//
-//            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
-//        }
-//
-//        return lowestPricesByBrand;
-//    }
+    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
+        List<Integer> lowestPricesByBrand = new ArrayList<>();
+        for (Category category : categories) {
+            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
+            if (lowestPriceInBrandAndCategory == null) {
+                continue;
+            }
+
+            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
+        }
+
+        return lowestPricesByBrand;
+    }
 
     //각 카테고리 이름으로 최소, 최대 가격조회 API
     //흐름! 1) 카테고리 정보를 토대로 브랜드별 브랜드 정보, 상품의 최대, 최저가 조회 -> 2) 검색된 브랜드별 최고, 최저가중의 최고, 최저가 추출 -> 3) 최대가와 최저가와 동일한 정보를 추출 -> 4) 응답
