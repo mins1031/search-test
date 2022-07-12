@@ -1,5 +1,6 @@
 package com.example.musinsasearch.product.service;
 
+import com.example.musinsasearch.brand.domain.Brand;
 import com.example.musinsasearch.brand.repository.BrandRepository;
 import com.example.musinsasearch.category.domain.Category;
 import com.example.musinsasearch.category.exception.NotFoundCategoryException;
@@ -7,9 +8,11 @@ import com.example.musinsasearch.category.repository.CategoryRepository;
 import com.example.musinsasearch.common.helper.SearchDataHelper;
 import com.example.musinsasearch.common.exception.SearchResultEmptyException;
 import com.example.musinsasearch.common.exception.WrongParameterException;
+import com.example.musinsasearch.product.domain.Product;
 import com.example.musinsasearch.product.dto.response.ProductCategorizeLowestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestAndHighestPriceResponses;
 import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponse;
+import com.example.musinsasearch.product.dto.response.ProductLowestPriceAndBrandResponses;
 import com.example.musinsasearch.product.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -88,11 +92,54 @@ class ProductSearchServiceTest {
         String brandName = "D";
 
         //when
-        ProductLowestPriceAndBrandResponse response = productSearchService.searchLowestPriceInAllBrand();
+        ProductLowestPriceAndBrandResponses responses = productSearchService.searchLowestPriceInAllBrand();
 
         //then
-        Assertions.assertThat(response.getLowestAllProductSumPrice()).isEqualTo(expectPrice);
-        Assertions.assertThat(response.getLowestBrandName()).isEqualTo(brandName);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(0).getLowestAllProductSumPrice()).isEqualTo(expectPrice);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(0).getLowestBrandName()).isEqualTo(brandName);
+    }
+
+    @DisplayName("한 브랜드에서 카테고리 상품중 최저가 상품의 합이 최소인 브랜드와 가격 중복조회")
+    @Test
+    void 브랜드_카테고리별_상품최저가합_최저가_중복조회() {
+        //given
+        List<Brand> brands = brandRepository.saveAll(Arrays.asList(
+                Brand.createBrand("A"),
+                Brand.createBrand("B"),
+                Brand.createBrand("C")
+        ));
+
+        List<Category> categories = categoryRepository.saveAll(Arrays.asList(
+                Category.createCategory("상의"),
+                Category.createCategory("하의"),
+                Category.createCategory("신발")
+        ));
+
+        List<Product> products = productRepository.saveAll(Arrays.asList(
+                Product.createProduct("product1", 1000, brands.get(0), categories.get(0)),
+                Product.createProduct("product2", 2000, brands.get(0), categories.get(1)),
+                Product.createProduct("product3", 3000, brands.get(0), categories.get(2)),
+                Product.createProduct("product4", 4000, brands.get(1), categories.get(0)),
+                Product.createProduct("product5", 5000, brands.get(1), categories.get(1)),
+                Product.createProduct("product6", 6000, brands.get(1), categories.get(2)),
+                Product.createProduct("product7", 1000, brands.get(2), categories.get(0)),
+                Product.createProduct("product8", 2000, brands.get(2), categories.get(1)),
+                Product.createProduct("product9", 3000, brands.get(2), categories.get(2))
+        ));
+
+        int expectPrice = 6000;
+        String firstBrandName = "A";
+        String secondBrandName = "C";
+
+        //when
+        ProductLowestPriceAndBrandResponses responses = productSearchService.searchLowestPriceInAllBrand();
+
+        //then
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses()).hasSize(2);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(0).getLowestAllProductSumPrice()).isEqualTo(expectPrice);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(0).getLowestBrandName()).isEqualTo(firstBrandName);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(1).getLowestAllProductSumPrice()).isEqualTo(expectPrice);
+        Assertions.assertThat(responses.getProductLowestPriceAndBrandResponses().get(1).getLowestBrandName()).isEqualTo(secondBrandName);
     }
 
     @DisplayName("카테고리에서 최대가와 브랜드, 최소가와 브랜드 조회")
