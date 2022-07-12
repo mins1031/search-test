@@ -6,6 +6,7 @@ Content-Type: application/json
 #  "statusCode": "OK",
 #  "message": null,
 #  "result": {
+#    "totalLowestPriceByCategory": 80002,
 #    "productCategorizeLowestPriceResponses": [
 #      {
 #        "productNum": 11625,
@@ -291,4 +292,4 @@ Content-Type: application/json
 #  }
 #}
 #
-#Response code: 200; Time: 2685ms; Content length: 3645 bytes
+#Response code: 200; Time: 2251ms; Content length: 3680 bytes

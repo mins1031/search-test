@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Table(indexes = {
         @Index(name = "idx_brand_category", columnList = "brand_num, category_num"),
         @Index(name = "idx_category", columnList = "category_num"),
-        @Index(name = "idx_price", columnList = "price")
+        @Index(name = "idx_price_category", columnList = "price, category_num")
 })
 public class Product extends BasicEntity {
 
