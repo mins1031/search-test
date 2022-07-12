@@ -99,19 +99,19 @@ public class ProductSearchService {
     }
 
     //브랜드의 각 카테고리별 최저가 조회.
-    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
-        List<Integer> lowestPricesByBrand = new ArrayList<>();
-        for (Category category : categories) {
-            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
-            if (lowestPriceInBrandAndCategory == null) {
-                continue;
-            }
-
-            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
-        }
-
-        return lowestPricesByBrand;
-    }
+//    private List<Integer> searchEachCategoryLowestPrices(List<Category> categories, Brand brand) {
+//        List<Integer> lowestPricesByBrand = new ArrayList<>();
+//        for (Category category : categories) {
+//            Integer lowestPriceInBrandAndCategory = productSearchRepository.findLowestPriceByCategoryAndBrand(category.getNum(), brand.getNum());
+//            if (lowestPriceInBrandAndCategory == null) {
+//                continue;
+//            }
+//
+//            lowestPricesByBrand.add(lowestPriceInBrandAndCategory);
+//        }
+//
+//        return lowestPricesByBrand;
+//    }
 
     //각 카테고리 이름으로 최소, 최대 가격조회 API
     //흐름! 1) 카테고리 정보를 토대로 브랜드별 브랜드 정보, 상품의 최대, 최저가 조회 -> 2) 검색된 브랜드별 최고, 최저가중의 최고, 최저가 추출 -> 3) 최대가와 최저가와 동일한 정보를 추출 -> 4) 응답
